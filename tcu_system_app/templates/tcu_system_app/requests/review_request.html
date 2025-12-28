@@ -1,0 +1,133 @@
+{% extends 'tcu_system_app/layout.html' %}
+{% load static %}
+
+{% block title %}Revisar Solicitud{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'tcu_system_app/css/review_request.css' %}">
+
+<div class="review-container">
+    <div class="review-header">
+        <h1><i class="bi bi-clipboard-check"></i> Revisar Solicitud</h1>
+        <a href="{% url 'home' %}" class="btn-back">
+            <i class="bi bi-arrow-left"></i> Volver al Dashboard
+        </a>
+    </div>
+
+    <div class="review-content">
+        <div class="request-info-card">
+            <div class="card-header">
+                <h2>Información de la Solicitud</h2>
+                <span class="request-id">ID: #{{ request.requestId }}</span>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label"><i class="bi bi-person"></i> Estudiante:</span>
+                    <span class="info-value">{{ request.userId_student.firstName }} {{ request.userId_student.lastName }}</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label"><i class="bi bi-calendar"></i> Fecha:</span>
+                    <span class="info-value">{{ request.date|date:"d/m/Y" }}</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label"><i class="bi bi-clock"></i> Horas Solicitadas:</span>
+                    <span class="info-value">{{ request.hoursRequested }} horas</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label"><i class="bi bi-kanban"></i> Proyecto:</span>
+                    <span class="info-value">
+                        {% if request.projectId %}
+                            {{ request.projectId.name }} ({{ request.projectId.code }})
+                        {% else %}
+                            Sin proyecto asignado
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <div class="info-item full-width">
+                    <span class="info-label"><i class="bi bi-card-text"></i> Estado Actual:</span>
+                    <span class="status-badge status-{{ request.statusId.name|lower|slugify }}">
+                        {{ request.statusId.name }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Descripción del estudiante -->
+        <div class="description-card">
+            <h3><i class="bi bi-chat-text"></i> Descripción del Estudiante</h3>
+            <div class="description-content">
+                {{ request.description|linebreaks }}
+            </div>
+        </div>
+
+        <!-- Archivos adjuntos -->
+        {% if files %}
+        <div class="files-card">
+            <h3><i class="bi bi-paperclip"></i> Archivos Adjuntos</h3>
+            <div class="files-grid">
+                {% for file in files %}
+                <div class="file-item">
+                    <i class="bi bi-file-earmark"></i>
+                    <div class="file-info">
+                        <span class="file-name">{{ file.filePath.name|cut:"uploads/" }}</span>
+                        <a href="{{ file.filePath.url }}" class="btn-download" target="_blank">
+                            <i class="bi bi-download"></i> Descargar
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Formulario de revisión -->
+        <form method="POST" class="review-form">
+            {% csrf_token %}
+            
+            <div class="form-card">
+                <h3><i class="bi bi-chat-square-text"></i> Comentario del Profesor</h3>
+                
+                <div class="form-group">
+                    <label for="professorComment">
+                        <i class="bi bi-pencil"></i> Comentarios o observaciones:
+                    </label>
+                    <textarea 
+                        id="professorComment" 
+                        name="professorComment" 
+                        rows="4" 
+                        placeholder="Ingresa tus comentarios, observaciones o retroalimentación para el estudiante..."
+                        class="comment-textarea"
+                    >{% if request.professorComent %}{{ request.professorComent }}{% endif %}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">
+                        <i class="bi bi-flag"></i> Cambiar Estado:
+                    </label>
+                    <select id="status" name="status" class="status-select">
+                        <option value="">-- Mantener estado actual --</option>
+                        {% for status in statuses %}
+                        <option value="{{ status.statusId }}" 
+                            {% if request.statusId.statusId == status.statusId %}selected{% endif %}>
+                            {{ status.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" name="action" value="approve" class="btn-approve">
+                        <i class="bi bi-check-circle"></i> Guardar Cambios
+                    </button>
+
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

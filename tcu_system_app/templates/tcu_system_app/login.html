@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'tcu_system_app/css/styles.css' %}">
+    <title>Login</title>
+</head>
+<body>
+
+<div class="gradient-bg"></div>
+<div class="login-container">
+
+    <div class="login-card">
+
+        <h1 class="title-main">Bienvenido</h1>
+        <p class="subtitle">Accedé con tu cuenta</p>
+
+        {% if messages %}
+        <div class="msg-container">
+            {% for message in messages %}
+                <div class="msg-error">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <input type="email" name="email" placeholder="Correo electrónico" required>
+            <input type="password" name="password" placeholder="Contraseña" required>
+            <button type="submit" class="btn-submit">Iniciar sesión</button>
+            <a href="#" class="forgot">¿Olvidaste tu contraseña?</a>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

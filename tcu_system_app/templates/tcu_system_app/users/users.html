@@ -1,0 +1,127 @@
+{% extends 'tcu_system_app/layout.html' %}
+{% load static %}
+
+{% block title %}Gestión de Usuarios{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'tcu_system_app/css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'tcu_system_app/css/users/users.css' %}">
+
+<!-- tabla de usuarios -->
+<div class="recent-requests">
+    <div class="table-header">
+        <h2>Lista de Usuarios</h2>
+        <div class="table-actions">
+            <a href="{% url 'create_user' %}" class="btn-create">
+                <i class="bi bi-plus-circle"></i> Nuevo Usuario
+            </a>
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" id="search-users" placeholder="Buscar usuarios...">
+            </div>
+        </div>
+    </div>
+    
+    {% if users %}
+    <div class="table-container">
+        <table class="requests-table" id="users-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre completo</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Proyecto</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>
+                        <span class="code-badge">{{ user.userId }}</span>
+                    </td>
+                    <td>
+                        <div class="user-info">
+                            <strong class="user-name">{{ user.firstName }} {{ user.lastName }}</strong>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="email-info">
+                            <span class="email-text">{{ user.email|truncatechars:25 }}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="role-badge {{ user.roleId.name|lower }}">
+                            {{ user.roleId.name }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if user.projectId %}
+                        <span class="project-assigned">
+                            <i class="bi bi-folder-check"></i>
+                            {{ user.projectId.name|truncatechars:20 }}
+                        </span>
+                        {% else %}
+                        <span class="no-project">
+                            <i class="bi bi-folder-x"></i> Sin proyecto
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            {% if user.roleId.name|lower == 'admin' %}
+                                <span class="admin-protected">
+                                    <i class="bi bi-shield-lock"></i> Admin
+                                </span>
+                            {% else %}
+                                <a href="{% url 'edit_user' user.userId %}" class="btn-action btn-edit" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button class="btn-action btn-delete" title="Eliminar" data-user-id="{{ user.userId }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-users">
+        <div class="empty-state">
+            <i class="bi bi-people"></i>
+            <h3>No hay usuarios registrados</h3>
+            <a href="{% url 'create_user' %}" class="btn-create-empty">
+                <i class="bi bi-plus-circle"></i> Crear Primer Usuario
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal de confirmación para eliminar -->
+<div class="modal" id="deleteModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="bi bi-exclamation-triangle"></i> Confirmar Eliminación</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>¿Estás seguro de que quieres eliminar este usuario?</p>
+            <p class="warning-text">
+                <i class="bi bi-info-circle"></i>
+                Esta acción no se puede deshacer. Se eliminarán todos los datos asociados al usuario.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel">Cancelar</button>
+            <button class="btn-confirm-delete">Eliminar Usuario</button>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'tcu_system_app/js/users.js' %}"></script>
+{% endblock %}

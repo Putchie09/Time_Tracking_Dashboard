@@ -1,0 +1,19 @@
+<div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+        <h2 class="logo">TCU</h2>
+    </div>
+
+    <ul class="sidebar-menu top-menu">
+        <li><a href="{% url 'home' %}"><i class="bi bi-house-door-fill"></i> <span class="menu-text">Dashboard</span></a></li>
+        <li><a href="{% url 'requests' %}"><i class="bi bi-file-text-fill"></i> <span class="menu-text">Solicitudes</span></a></li>
+
+        {% if user_role == 'Admin' %}
+        <li><a href="{% url 'list_projects' %}"><i class="bi bi-archive-fill"></i> <span class="menu-text">Proyectos</span></a></li>
+        <li><a href="{% url 'list_users' %}"><i class="bi bi-people-fill"></i> <span class="menu-text">Usuarios</span></a></li>
+        {% endif %}
+    </ul>
+
+    <ul class="sidebar-menu bottom-menu">
+        <li><a href="{% url 'logout' %}" class="logout"><i class="bi bi-box-arrow-right"></i> <span class="menu-text">Cerrar sesión</span></a></li>
+    </ul>
+</div>

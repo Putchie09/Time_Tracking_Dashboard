@@ -1,0 +1,29 @@
+{% load static %}
+<nav class="navbar">
+    <button id="toggle-btn" class="toggle-btn">☰</button>
+
+    <div class="nav-right">
+        <!-- Información del usuario a la derecha -->
+        <div class="user-info">
+            <span class="user-name">
+                {% if current_user %}
+                    {{ current_user.firstName }} {{ current_user.lastName }}
+                {% else %}
+                    Usuario
+                {% endif %}
+            </span>
+            <span class="user-role">
+                {% if current_user and current_user.roleId %}
+                    {{ current_user.roleId.name|title }}
+                {% else %}
+                    Rol no definido
+                {% endif %}
+            </span>
+        </div>
+
+        <!-- icono usuario -->
+        <div class="user-icon-minimal">
+            <i class="bi bi-person"></i>
+        </div>
+    </div>
+</nav>

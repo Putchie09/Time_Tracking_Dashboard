@@ -1,0 +1,182 @@
+{% extends 'tcu_system_app/layout.html' %}
+{% load static %}
+
+{% block title %}Detalles de Solicitud{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'tcu_system_app/css/request_detail.css' %}">
+
+<div class="detail-container">
+    <div class="detail-header">
+        <div class="header-left">
+            <h1><i class="bi bi-file-earmark-text"></i> Detalles de Solicitud</h1>
+        </div>
+        
+        <div class="header-right">
+            <a href="{% url 'home' %}" class="btn-back">
+                <i class="bi bi-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+
+    <div class="detail-content">
+        <!-- Tarjeta de información principal -->
+        <div class="info-card main-info">
+            <div class="card-title">
+                <h2><i class="bi bi-info-circle"></i> Información General</h2>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-item">
+                    <span class="info-label"><i class="bi bi-calendar"></i> Fecha de Solicitud:</span>
+                    <span class="info-value">{{ request.date|date:"d/m/Y" }}</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label"><i class="bi bi-clock"></i> Horas Solicitadas:</span>
+                    <span class="info-value">{{ request.hoursRequested }} horas</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label"><i class="bi bi-person"></i></i> Solicitante:</span>
+                    <span class="info-value">{{ request.userId_student.firstName }} {{ request.userId_student.lastName }}</span>
+                </div>
+
+                <div class="info-item">
+                    <span class="info-label"><i class="bi bi-envelope"></i></i> Email:</span>
+                    <span class="info-value">{{ request.userId_student.email }}</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label"><i class="bi bi-kanban"></i> Proyecto:</span>
+                    <span class="info-value">
+                        {% if request.projectId %}
+                            {{ request.projectId.name }} 
+                            <span class="project-code">({{ request.projectId.code }})</span>
+                        {% else %}
+                            <span class="no-data">No asignado</span>
+                        {% endif %}
+                    </span>
+                </div>
+
+                <div class="info-item full-width">
+                    <span class="info-label"><i class="bi bi-flag"></i> Estado:</span>
+                    <span class="status-badge status-{{ request.statusId.name|lower|slugify }}">
+                        <i class="bi 
+                            {% if request.statusId.name|lower == 'aceptada' %}bi-check-circle
+                            {% elif request.statusId.name|lower == 'rechazada' %}bi-x-circle
+                            {% else %}bi-hourglass-split{% endif %}">
+                        </i>
+                        {{ request.statusId.name }}
+                    </span>
+
+                </div>
+            </div>
+
+            <hr class="description-divider">
+
+            <div class="text-section">
+                <h3 class="section-title">
+                    <i class="bi bi-chat-left-text"></i> Descripción
+                </h3>
+                
+                <div class="text-content-box">
+                    {% if request.description %}
+                        {{ request.description|linebreaks }}
+                    {% else %}
+                        <p class="no-text">No se proporcionó descripción.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <!-- Archivos adjuntos  -->
+            {% if files %}
+            <hr class="section-divider">
+
+            <div class="files-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="bi bi-paperclip"></i> Archivos Adjuntos
+                    </h3>
+                    <span class="file-count">{{ files|length }} archivo{{ files|pluralize }}</span>
+                </div>
+                
+                <div class="files-list">
+                    {% for file in files %}
+                    <div class="file-item">
+                        <div class="file-icon">
+                            <i class="bi 
+                                {% if '.pdf' in file.filePath.name %}bi-filetype-pdf
+                                {% elif '.doc' in file.filePath.name or '.docx' in file.filePath.name %}bi-filetype-docx
+                                {% elif '.xls' in file.filePath.name or '.xlsx' in file.filePath.name %}bi-filetype-xlsx
+                                {% elif '.jpg' in file.filePath.name or '.jpeg' in file.filePath.name or '.png' in file.filePath.name %}bi-filetype-jpg
+                                {% else %}bi-file-earmark{% endif %}">
+                            </i>
+                        </div>
+                        
+                        <div class="file-info">
+                            <span class="file-name">{{ file.filePath.name|cut:"uploads/"|truncatechars:50 }}</span>
+                            <span class="file-size">{% widthratio file.filePath.size 1024 1|floatformat:0 %} KB</span>
+                        </div>
+                        
+                        <div class="file-actions">
+                            <a href="{{ file.filePath.url }}" class="btn-download" target="_blank" download>
+                                <i class="bi bi-download"></i> Descargar
+                            </a>
+                            <a href="{{ file.filePath.url }}" class="btn-preview" target="_blank">
+                                <i class="bi bi-eye"></i> Ver
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+
+            <!-- Comentario del profesor -->
+            {% if request.professorComent %}
+            <hr class="section-divider">
+
+            <div class="text-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        <i class="bi bi-chat-square-text"></i> Comentario del Profesor
+                    </h3>
+                    <span class="comment-date">Actualizado el {{ request.revisionDate|date:"d/m/Y" }}</span>
+                </div>
+                
+                <div class="professor-info-header">
+                    <div>
+                        <strong>Profesor:</strong>
+                        {% if request.projectId and request.projectId.userId_professor %}
+                            {{ request.projectId.userId_professor.firstName }} {{ request.projectId.userId_professor.lastName }}
+                        {% else %}
+                            Profesor asignado al proyecto
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="text-content-box">
+                    {{ request.professorComent|linebreaks }}
+                </div>
+            </div>
+            {% elif request.statusId.name|lower != 'pendiente' %}
+            <hr class="section-divider">
+
+            <div class="text-section">
+                <h3 class="section-title">
+                    <i class="bi bi-chat-square"></i> Comentario del Profesor
+                </h3>
+                
+                <div class="no-comment-box">
+                    <i class="bi bi-info-circle"></i>
+                    <p>El profesor aún no ha agregado comentarios para esta solicitud.</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

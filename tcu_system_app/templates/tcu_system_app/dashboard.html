@@ -1,0 +1,137 @@
+{% extends 'tcu_system_app/layout.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'tcu_system_app/css/dashboard.css' %}">
+
+<!-- Sección de tarjetas -->
+<div class="dashboard">
+    <div class="card total">
+        <div class="card-left">
+            <i class="bi bi-clock-history"></i>
+        </div>
+        <div class="card-right">
+            <h2>{{ total_count }}</h2>
+            <p>Solicitudes totales</p>
+        </div>
+    </div>
+
+    <div class="card approved">
+        <div class="card-left">
+            <i class="bi bi-check-circle"></i>
+        </div>
+        <div class="card-right">
+            <h2>{{ approved_count }}</h2>
+            <p>Solicitudes aceptadas</p>
+        </div>
+    </div>
+
+    <div class="card pending">
+        <div class="card-left">
+            <i class="bi bi-hourglass-split"></i>
+        </div>
+        <div class="card-right">
+            <h2>{{ pending_count }}</h2>
+            <p>Solicitudes pendientes</p>
+        </div>
+    </div>
+
+    <div class="card rejected">
+        <div class="card-left">
+            <i class="bi bi-x-circle"></i>
+        </div>
+        <div class="card-right">
+            <h2>{{ rejected_count }}</h2>
+            <p>Solicitudes rechazadas</p>
+        </div>
+    </div>
+</div>
+
+<!-- Sección de tabla de solicitudes recientes -->
+<div class="recent-requests">
+    <h2>Solicitudes Recientes</h2>
+    
+    {% if recent_requests %}
+    <div class="table-container">
+        <table class="requests-table">
+            <thead>
+                <tr>
+                    {% if user_role != 'Estudiante' %}
+                    <th>Estudiante</th>
+                    {% endif %}
+                    <th>Fecha</th>
+                    <th>Horas</th>
+                    <th>Proyecto</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in recent_requests %}
+                <tr>
+                    <!-- Si es profesor/admin mostrar información del estudiante -->
+                    {% if user_role != 'Estudiante' %}
+                    <td>
+                        {{ request.userId_student.firstName }} {{ request.userId_student.lastName }}
+                        {% if request.userId_student == current_user %}
+                        <span class="badge-you">(Tú)</span>
+                        {% endif %}
+                    </td>
+                    {% endif %}
+                    
+                    <td>{{ request.date|date:"d/m/Y" }}</td>
+                    <td>{{ request.hoursRequested }}</td>
+                    <td>
+                        {% if request.projectId %}
+                            {{ request.projectId.name }}
+                        {% else %}
+                            <span class="no-project">Sin proyecto</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="status-badge status-{{ request.statusId.name|lower|slugify }}">
+                            {{ request.statusId.name }}
+                        </span>
+                    </td>
+                    <td>
+                        <!-- Diferente acción según el rol -->
+                        {% if user_role == 'Estudiante' %}
+                            <!-- ver detalles -->
+                            <a href="{% url 'request_detail' request.requestId %}" class="btn-view">
+                                <i class="bi bi-eye"></i> Ver
+                            </a>
+                        {% else %}
+                            {% if user_role == 'Profesor' and request.projectId and request.projectId.userId_professor == current_user or user_role == 'Administrador' %}
+                            <a href="{% url 'review_request' request.requestId %}" class="btn-review">
+                                <i class="bi bi-check-circle"></i> Revisar
+                            </a>
+                            {% else %}
+                            <a href="{% url 'request_detail' request.requestId %}" class="btn-view">
+                                <i class="bi bi-eye"></i> Ver
+                            </a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-requests-message">
+        <i class="bi bi-inbox"></i>
+        <h3>No hay solicitudes recientes</h3>
+        {% if user_role == 'Estudiante' %}
+            <p>No has realizado solicitudes aún</p>
+        {% elif user_role == 'Profesor' %}
+            <p>No hay solicitudes recientes en tus proyectos</p>
+        {% else %}
+            <p>No hay solicitudes recientes</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

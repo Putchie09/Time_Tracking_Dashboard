@@ -1,0 +1,363 @@
+.dashboard {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+    justify-content: flex-start;
+}
+
+/* SECCIÓN DE TABLA DE SOLICITUDES RECIENTES */
+
+.recent-requests {
+    margin-top: 50px;
+    background-color: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    border: 1px solid #eaeaea;
+    width: 95%;
+}
+
+/* Header con botón */
+.header-with-button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f4f8;
+}
+
+.header-with-button h2 {
+    margin: 0;
+    color: #2d3748;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Botón de crear solicitud (estilo igual a crear usuario/proyecto) */
+.btn-create {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+}
+
+.btn-create:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-create i {
+    font-size: 1.1rem;
+}
+
+.table-container {
+    overflow-x: auto;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+.requests-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 800px;
+}
+
+.requests-table thead {
+    background-color: #f8fafc;
+}
+
+.requests-table th {
+    padding: 16px 20px;
+    text-align: left;
+    font-weight: 600;
+    color: #4a5568;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.requests-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid #edf2f7;
+    color: #2d3748;
+    font-size: 0.95rem;
+}
+
+.requests-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.requests-table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+.requests-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Badges de estado */
+.status-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+}
+
+.status-aceptada,
+.status-aprobada {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.status-pendiente {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: #f59e0b;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.status-rechazada {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.status-en-revision,
+.status-en-proceso {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* Botones de acción */
+.btn-view {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background-color: rgba(107, 114, 128, 0.1);
+    color: #6b7280;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(107, 114, 128, 0.2);
+}
+
+.btn-view:hover {
+    background-color: #6b7280;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.btn-review {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background-color: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+.btn-review:hover {
+    background-color: #3b82f6;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+}
+
+/* Badge para "Tú" en la tabla */
+.badge-you {
+    display: inline-block;
+    background-color: #e0f2fe;
+    color: #0369a1;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    margin-left: 5px;
+    font-weight: 500;
+}
+
+.no-project {
+    color: #9ca3af;
+    font-style: italic;
+}
+
+/* Mensaje cuando no hay solicitudes */
+.no-requests-message {
+    text-align: center;
+    padding: 60px 20px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    border: 1px dashed #cbd5e0;
+}
+
+.no-requests-message i {
+    font-size: 4rem;
+    color: #d1d5db;
+    margin-bottom: 20px;
+}
+
+.no-requests-message h3 {
+    color: #4b5563;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.no-requests-message p {
+    color: #9ca3af;
+    margin-bottom: 25px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-create-empty {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-create-empty:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+}
+
+/* Estadísticas para estudiantes */
+.student-stats {
+    background-color: #f8fafc;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border-left: 4px solid #3b82f6;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.stat-label {
+    color: #6b7280;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.stat-value {
+    color: #1f2937;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.stat-value.hours-approved {
+    color: #10b981;
+}
+
+.stat-value.hours-pending {
+    color: #f59e0b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .recent-requests {
+        padding: 20px;
+        margin-top: 30px;
+        width: 100%;
+    }
+    
+    .header-with-button {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .header-with-button h2 {
+        font-size: 1.3rem;
+    }
+    
+    .header-actions {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    
+    .requests-table th,
+    .requests-table td {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .btn-create,
+    .btn-view,
+    .btn-review {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+    }
+    
+    .student-stats {
+        grid-template-columns: 1fr;
+        padding: 15px;
+    }
+    
+    .no-requests-message {
+        padding: 40px 15px;
+    }
+    
+    .no-requests-message i {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .recent-requests {
+        padding: 15px;
+    }
+    
+    .requests-table {
+        min-width: 600px;
+    }
+    
+    .btn-create-empty {
+        width: 100%;
+        justify-content: center;
+    }
+}

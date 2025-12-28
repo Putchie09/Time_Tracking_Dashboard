@@ -1,0 +1,125 @@
+{% extends 'tcu_system_app/layout.html' %}
+{% load static %}
+
+{% block title %}Gestión de Proyectos{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'tcu_system_app/css/dashboard.css' %}">
+<link rel="stylesheet" href="{% static 'tcu_system_app/css/projects/projects.css' %}">
+
+<!-- tabla de proyectos -->
+<div class="recent-requests">
+    <div class="table-header">
+        <h2>Lista de Proyectos</h2>
+        <div class="table-actions">
+            <a href="{% url 'create_project' %}" class="btn-create">
+                <i class="bi bi-plus-circle"></i> Nuevo Proyecto
+            </a>
+            <div class="search-box">
+                <i class="bi bi-search"></i>
+                <input type="text" id="search-projects" placeholder="Buscar proyectos...">
+            </div>
+        </div>
+    </div>
+    
+    {% if all_projects %}
+    <div class="table-container">
+        <table class="requests-table" id="projects-table">
+            <thead>
+                <tr>
+                    <th>CÓDIGO</th>
+                    <th>NOMBRE</th>
+                    <th>PROFESOR ASIGNADO</th>
+                    <th>ESTADO</th>
+                    <th>ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in all_projects %}
+                <tr>
+                    <td>
+                        <span class="code-badge">{{ project.code }}</span>
+                    </td>
+                    <td>
+                        <div class="project-info">
+                            <strong class="project-name">{{ project.name }}</strong>
+                            <small class="project-id">ID: {{ project.projectId }}</small>
+                        </div>
+                    </td>
+                    <td>
+                        {% if project.userId_professor %}
+                        <div class="professor-info">
+                            <div class="professor-details">
+                                <strong>{{ project.userId_professor.firstName }} {{ project.userId_professor.lastName }}</strong>
+                                <small>{{ project.userId_professor.email|truncatechars:20 }}</small>
+                            </div>
+                        </div>
+                        {% else %}
+                        <span class="no-professor">
+                            <i class="bi bi-person-x"></i> Sin asignar
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if project.userId_professor %}
+                        <span class="status-badge status-active">
+                            <i class="bi bi-check-circle"></i> Activo
+                        </span>
+                        {% else %}
+                        <span class="status-badge status-inactive">
+                            <i class="bi bi-clock"></i> Inactivo
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            <a href="{% url 'edit_project' project.projectId %}" class="btn-action btn-edit" title="Editar">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <button class="btn-action btn-delete" title="Eliminar" data-project-id="{{ project.projectId }}">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-projects">
+        <div class="empty-state">
+            <i class="bi bi-folder-x"></i>
+            <h3>No hay proyectos registrados</h3>
+            <p>Crea tu primer proyecto para empezar a gestionar las horas TCU.</p>
+            <a href="{% url 'create_project' %}" class="btn-create-empty">
+                <i class="bi bi-plus-circle"></i> Crear Primer Proyecto
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal de confirmación para eliminar -->
+<div class="modal" id="deleteModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="bi bi-exclamation-triangle"></i> Confirmar Eliminación</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>¿Estás seguro de que quieres eliminar este proyecto?</p>
+            <p class="warning-text">
+                <i class="bi bi-info-circle"></i>
+                Esta acción no se puede deshacer. Se eliminarán todos los datos asociados al proyecto.
+            </p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-cancel">Cancelar</button>
+            <button class="btn-confirm-delete">Eliminar Proyecto</button>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'tcu_system_app/js/projects.js' %}"></script>
+{% endblock %}

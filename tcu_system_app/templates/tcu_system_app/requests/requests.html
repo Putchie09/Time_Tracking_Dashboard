@@ -1,0 +1,89 @@
+{% extends 'tcu_system_app/layout.html' %}
+{% load static %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'tcu_system_app/css/requests.css' %}">
+
+<div class="recent-requests">
+    <div class="header-with-button">
+        <h2>Historial de solicitudes</h2>
+        
+        {% if current_user.roleId.name == 'Estudiante' %}
+        <div class="header-actions">
+            <a href="{% url 'create_request' %}" class="btn-create">
+                <i class="bi bi-plus-circle"></i> Nueva Solicitud
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    
+    {% if all_requests %}
+    <div class="table-container">
+        <table class="requests-table">
+            <thead>
+                <tr>
+                    <th>Usuario</th>
+                    <th>Fecha</th>
+                    <th>Horas</th>
+                    <th>Proyecto</th>
+                    <th>Estado</th>
+                    <th>Acción</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for request in all_requests %}
+                <tr>
+                    <td>
+                        {{ request.userId_student.firstName }} {{ request.userId_student.lastName }}
+                        {% if request.userId_student.userId == current_user.userId %}
+                        <span class="badge-you">Tú</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ request.date|date:"d/m/Y" }}</td>
+                    <td>{{ request.hoursRequested }}</td>
+                    <td>
+                        {% if request.projectId %}
+                        {{ request.projectId.name }}
+                        {% else %}
+                        <span class="no-project">Sin proyecto</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="status-badge status-{{ request.statusId.name|lower }}">
+                            {{ request.statusId.name }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if current_user.roleId.name == 'Estudiante' %}
+                            <!-- Para estudiante ver detalles -->
+                            <a href="{% url 'request_detail' request.requestId %}" class="btn-view">
+                                <i class="bi bi-eye"></i> Ver
+                            </a>
+                        {% else %}
+                            <!-- Para profesor revisar-->
+                            <a href="{% url 'review_request' request.requestId %}" class="btn-review">
+                                <i class="bi bi-check-circle"></i> Revisar
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="no-requests-message">
+        <i class="bi bi-inbox"></i>
+        <h3>No hay solicitudes</h3>
+        {% if current_user.roleId.name == 'Estudiante' %}
+        <p>Crea tu primera solicitud para registrar horas TCU</p>
+        {% else %}
+        <p>No hay solicitudes pendientes de revisión</p>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}
