@@ -1,6 +1,6 @@
 # TCU Hours Registry System
 
-## ⚠️ Important Disclaimer
+## ⚠️ Disclaimer
 **This is a personal prototype project and should NOT be used as a production solution in its current state.** This system demonstrates conceptual improvements to university administrative workflows but lacks the security audits, compliance features, and institutional integration required for real-world deployment. It serves as a proof-of-concept for how digital transformation could improve TCU hour tracking processes.
 
 ## 📋 Project Overview
@@ -32,7 +32,7 @@ The **TCU Hours Registry System** is a personal prototype project developed to r
 - **Project Management**: Set up and configure TCU projects
 - **Full Oversight**: Modify any request and manage system-wide operations
 
-## 🚀 Key Features (Prototype Implementation)
+## 🚀 Features
 
 - **Secure Authentication**: Role-based access control with password encryption
 - **Request Management**: Complete workflow from submission to approval
