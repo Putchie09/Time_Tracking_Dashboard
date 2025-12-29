@@ -54,9 +54,9 @@ The **TCU Hours Registry System** is a personal prototype project developed to r
 ## Project setup
 - Apply database migrations: python manage.py migrate
 - Create initial data and users
-    - # With default password (admin123)
+    -  **With default password (admin123)**
         - python manage.py create_initial_data
-    - # Or with custom password
+    - **Or with custom password**
         - python manage.py create_initial_data --password yourSecurePassword
 - Run the development server
     - python manage.py runserver
